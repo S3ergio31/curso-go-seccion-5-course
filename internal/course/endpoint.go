@@ -49,13 +49,6 @@ type UpdateRequest struct {
 	EndDate   *string `json:"end_date"`
 }
 
-type Response struct {
-	Status int        `json:"status"`
-	Data   any        `json:"data,omitempty"`
-	Err    string     `json:"error,omitempty"`
-	Meta   *meta.Meta `json:"meta,omitempty"`
-}
-
 func MakeEndpoints(s Service) Endpoints {
 	return Endpoints{
 		Create: makeCreateEndpoint(s),
