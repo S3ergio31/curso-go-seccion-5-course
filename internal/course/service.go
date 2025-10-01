@@ -41,6 +41,10 @@ func (s service) Create(name, startDate, endDate string) (*domain.Course, error)
 		return nil, err
 	}
 
+	if startDateParsed.After(endDateParsed) {
+		return nil, ErrorEndLesserStart
+	}
+
 	course := &domain.Course{
 		Name:      name,
 		StartDate: startDateParsed,
@@ -81,6 +85,12 @@ func (s service) Delete(id string) error {
 func (s service) Update(id string, name, startDate, endDate *string) error {
 	var startDateParsed, endDateParsed *time.Time
 
+	course, err := s.Get(id)
+
+	if err != nil {
+		return err
+	}
+
 	if startDate != nil {
 		date, err := time.Parse("2006-01-02", *startDate)
 
@@ -92,6 +102,10 @@ func (s service) Update(id string, name, startDate, endDate *string) error {
 		startDateParsed = &date
 	}
 
+	if startDateParsed != nil && startDateParsed.After(course.EndDate) {
+		return ErrorEndLesserStart
+	}
+
 	if endDate != nil {
 		date, err := time.Parse("2006-01-02", *endDate)
 
@@ -101,6 +115,10 @@ func (s service) Update(id string, name, startDate, endDate *string) error {
 		}
 
 		endDateParsed = &date
+	}
+
+	if endDateParsed != nil && course.StartDate.After(*endDateParsed) {
+		return ErrorEndLesserStart
 	}
 
 	return s.repository.Update(id, name, startDateParsed, endDateParsed)

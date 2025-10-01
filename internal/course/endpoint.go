@@ -79,6 +79,10 @@ func makeCreateEndpoint(s Service) endpoint.Endpoint {
 			createRequest.EndDate,
 		)
 
+		if errors.Is(err, ErrorEndLesserStart) {
+			return nil, response.BadRequest(err.Error())
+		}
+
 		if err != nil {
 			return nil, response.InternalServerError(err.Error())
 		}
@@ -158,6 +162,10 @@ func makeUpdateEndpoint(s Service) endpoint.Endpoint {
 
 		if errors.As(err, &ErrorCourseNotFound{}) {
 			return nil, response.NotFound(err.Error())
+		}
+
+		if errors.Is(err, ErrorEndLesserStart) {
+			return nil, response.BadRequest(err.Error())
 		}
 
 		if err != nil {

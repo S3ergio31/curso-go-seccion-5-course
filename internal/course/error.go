@@ -11,6 +11,8 @@ var ErrorStartDateRequired = errors.New("start date is required")
 
 var ErrorEndDateRequired = errors.New("end date is required")
 
+var ErrorEndLesserStart = errors.New("start date must be lower than end date")
+
 type ErrorCourseNotFound struct {
 	CourseID string
 }
