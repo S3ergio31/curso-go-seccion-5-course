@@ -22,9 +22,7 @@ type service struct {
 }
 
 type Filters struct {
-	Name      string
-	StartDate string
-	EndDate   string
+	Name string
 }
 
 func (s service) Create(name, startDate, endDate string) (*domain.Course, error) {

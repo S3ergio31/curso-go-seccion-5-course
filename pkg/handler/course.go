@@ -104,11 +104,9 @@ func decodeGetAllCourse(_ context.Context, r *http.Request) (any, error) {
 	page, _ := strconv.Atoi(v.Get("page"))
 
 	req := course.GetAllRequest{
-		Name:      v.Get("name"),
-		StartDate: v.Get("start_date"),
-		EndDate:   v.Get("end_date"),
-		Limit:     limit,
-		Page:      page,
+		Name:  v.Get("name"),
+		Limit: limit,
+		Page:  page,
 	}
 
 	return req, nil

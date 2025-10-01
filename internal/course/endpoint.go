@@ -31,11 +31,9 @@ type GetRequest struct {
 }
 
 type GetAllRequest struct {
-	Name      string
-	StartDate string
-	EndDate   string
-	Limit     int
-	Page      int
+	Name  string
+	Limit int
+	Page  int
 }
 
 type DeleteRequest struct {
@@ -110,9 +108,7 @@ func makeGetAllEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request any) (any, error) {
 		req := request.(GetAllRequest)
 		filters := Filters{
-			Name:      req.Name,
-			StartDate: req.StartDate,
-			EndDate:   req.EndDate,
+			Name: req.Name,
 		}
 
 		count, err := s.Count(filters)
