@@ -10,6 +10,6 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: curso_go_seccion_5_course
     ports:
-      - "3321:3307"
+      - "3321:3306"
     volumes:
       - ./.dockers/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql

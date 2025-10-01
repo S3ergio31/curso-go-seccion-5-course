@@ -1,0 +1,47 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/S3ergio31/curso-go-seccion-5-course/internal/course"
+	"github.com/S3ergio31/curso-go-seccion-5-course/pkg/bootstrap"
+	"github.com/S3ergio31/curso-go-seccion-5-course/pkg/handler"
+	"github.com/joho/godotenv"
+)
+
+func main() {
+	godotenv.Load()
+	db, err := bootstrap.DBConnection()
+	logger := bootstrap.InitLogger()
+
+	if err != nil {
+		logger.Fatalln(err)
+	}
+
+	courseRepository := course.NewRepository(logger, db)
+	courseService := course.NewService(courseRepository, logger)
+	courseEndpoints := course.MakeEndpoints(courseService)
+
+	address := fmt.Sprintf("%s:%s", os.Getenv("APP_URL"), os.Getenv("APP_PORT"))
+	server := &http.Server{
+		Handler:      handler.NewCourseHttpServer(courseEndpoints),
+		Addr:         address,
+		WriteTimeout: 1 * time.Minute,
+		ReadTimeout:  1 * time.Minute,
+	}
+
+	errCh := make(chan error)
+	go func() {
+		logger.Println("listen in ", address)
+		errCh <- server.ListenAndServe()
+	}()
+
+	err = <-errCh
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+}
